@@ -19,5 +19,5 @@ During the baseline evaluation, the Exact Match Accuracy resulted in 0% (and a v
     * **Matras & Conjuncts:** Vowel modifiers and half-letters (samyuktakshars) overlap heavily in handwriting, making character-level isolation nearly impossible for a printed-text model.
 3. **Lack of Preprocessing:** The baseline was run on raw images with varying dimensions, illumination, and background noise. Without a robust preprocessing pipeline (resizing, padding, binarization), the text features cannot be effectively isolated.
 
-## Dataset used - 
+## Dataset used 
 https://huggingface.co/datasets/c3rl/IIIT-INDIC-HW-WORDS-Hindi
