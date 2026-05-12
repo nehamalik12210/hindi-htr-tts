@@ -1,0 +1,50 @@
+{
+  "image_height": 32,
+  "image_width": 128,
+  "binarization_mode": "otsu",
+  "invert_image": false,
+  "keep_aspect_ratio": true,
+  "normalization": "image / 255 -> (x - 0.5) / 0.5, range [-1, 1]",
+  "blank_token": "<BLANK>",
+  "unk_token": "<UNK>",
+  "pad_token": "<PAD>",
+  "blank_idx": 0,
+  "unk_idx": 137,
+  "pad_idx": 138,
+  "batch_size": 32,
+  "augmentations": {
+    "rotation_degrees": [
+      -5,
+      5
+    ],
+    "elastic_distortion": true,
+    "noise_addition": true,
+    "erode_dilate": true,
+    "shear_slant_degrees": [
+      -12,
+      12
+    ],
+    "cutout_coarse_dropout": true,
+    "perspective_transform": true,
+    "brightness_contrast_jitter": true,
+    "probabilities": {
+      "rotation": 0.6,
+      "elastic": 0.5,
+      "noise": 0.5,
+      "erode_dilate": 0.25,
+      "shear": 0.55,
+      "cutout": 0.35,
+      "perspective": 0.3,
+      "brightness_contrast": 0.4
+    }
+  },
+  "skip_binarization": false,
+  "tight_crop_pad": 2,
+  "split_sizes": {
+    "train": 150000,
+    "val": 20000,
+    "test": 30000
+  },
+  "image_column": "image",
+  "label_column": "text"
+}
