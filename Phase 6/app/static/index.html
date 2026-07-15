@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="hi" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akshar — Hindi Handwriting Recognition</title>
+    <meta name="description" content="Convert handwritten Hindi documents to digital text and speech using AI.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/styles.css?v=3">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <span class="brand-icon">अ</span>
+            <span class="brand-text">Akshar</span>
+        </div>
+        <button id="themeToggle" class="btn-icon" title="Toggle theme">
+            <span id="themeIcon">🌙</span>
+        </button>
+    </nav>
+
+    <!-- Toasts -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <main class="main-wrap">
+    <!-- STATE 1: Upload (centered) -->
+    <div class="page-center" id="uploadPage">
+        <div class="card upload-card" id="uploadCard">
+            <!-- Upload zone (before file selected) -->
+            <div id="uploadZone" class="upload-zone">
+                <div class="upload-icon-wrap">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                        <polyline points="17 8 12 3 7 8"/>
+                        <line x1="12" y1="3" x2="12" y2="15"/>
+                    </svg>
+                </div>
+                <h2>Upload Document</h2>
+                <p class="text-muted">Drag & drop or click to select</p>
+                <p class="text-small">PNG, JPG, PDF, DOCX — up to 50MB</p>
+            </div>
+
+            <!-- File selected (replaces upload zone) -->
+            <div id="fileSelectedBox" class="file-selected-box hidden">
+                <div class="file-info-row">
+                    <span class="file-emoji">📄</span>
+                    <div class="file-meta">
+                        <span class="file-name" id="fileName"></span>
+                        <span class="file-size text-muted" id="fileSize"></span>
+                    </div>
+                </div>
+                <button class="btn btn-accent" id="processBtn">
+                    <span id="processBtnText">Process File</span>
+                    <span class="spinner hidden" id="processSpinner"></span>
+                </button>
+                <button class="btn btn-ghost" id="changeFileBtn">Choose different file</button>
+            </div>
+
+            <!-- Processing state -->
+            <div id="processingBox" class="processing-box hidden">
+                <span class="spinner lg"></span>
+                <p id="processingText" class="text-muted">Detecting words...</p>
+                <div class="steps-row">
+                    <span class="step" id="s1">Detect</span>
+                    <span class="step-dot">→</span>
+                    <span class="step" id="s2">Recognize</span>
+                    <span class="step-dot">→</span>
+                    <span class="step" id="s3">Done</span>
+                </div>
+            </div>
+
+            <input type="file" id="fileInput" accept=".png,.jpg,.jpeg,.bmp,.tiff,.tif,.webp,.pdf,.docx" hidden>
+        </div>
+    </div>
+
+    <!-- STATE 2: Results (two panels) -->
+    <div class="results-page hidden" id="resultsPage">
+        <!-- Left Panel -->
+        <div class="panel-left">
+            <button class="btn btn-outline" id="uploadNewBtn">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Upload New File
+            </button>
+            <div class="file-display-card">
+                <span class="file-emoji big">📄</span>
+                <span class="file-display-name" id="rFileName"></span>
+                <span class="file-display-size text-muted" id="rFileSize"></span>
+                <div class="pills">
+                    <span class="pill" id="wordCount">— words</span>
+                    <span class="pill" id="pageCount">— page</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel -->
+        <div class="panel-right">
+            <!-- Audio Section -->
+            <div class="section audio-sec">
+                <div class="sec-header">
+                    <span class="sec-label">Audio</span>
+                    <div class="sec-actions">
+                        <button class="btn btn-green" id="genAudioBtn">
+                            🔊 Generate Audio
+                        </button>
+                        <div class="voice-toggle hidden" id="voiceToggle">
+                            <button class="vtog active" data-v="female" id="vFemale">Female</button>
+                            <button class="vtog" data-v="male" id="vMale">Male</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="tts-loading hidden" id="ttsLoading">
+                    <span class="spinner sm"></span>
+                    <span>Generating <b id="ttsVoiceLabel">female</b> voice...</span>
+                </div>
+                <div class="player hidden" id="audioPlayer">
+                    <button class="play-btn" id="playPauseBtn">
+                        <svg id="iPlay" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                        <svg id="iPause" class="hidden" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+                    </button>
+                    <div class="prog-bar" id="progBar">
+                        <div class="prog-fill" id="progFill"></div>
+                    </div>
+                    <span class="time" id="curTime">0:00</span>
+                    <span class="time">/</span>
+                    <span class="time" id="totTime">0:00</span>
+                </div>
+                <div class="hidden" id="audioDlRow">
+                    <div class="dropdown" id="audioDd">
+                        <button class="btn btn-sm" onclick="toggleDd('audioDd')">⬇ Download As</button>
+                        <div class="dd-menu">
+                            <button onclick="dlAudio('wav')">WAV</button>
+                            <button onclick="dlAudio('mp3')">MP3</button>
+                            <button onclick="dlAudio('ogg')">OGG</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Text Section -->
+            <div class="section text-sec">
+                <div class="sec-header">
+                    <span class="sec-label">Recognized Text</span>
+                    <div class="dropdown" id="textDd">
+                        <button class="btn btn-sm" onclick="toggleDd('textDd')">⬇ Download As</button>
+                        <div class="dd-menu">
+                            <button onclick="dlText('pdf')">PDF</button>
+                            <button onclick="dlText('docx')">DOCX</button>
+                            <button onclick="dlText('png')" id="pngOpt">PNG</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-box" id="recText">—</div>
+                <div class="accuracy-bar">⚠ Recognition accuracy: ~70% word-level on handwritten Hindi</div>
+            </div>
+        </div>
+    </div>
+    </main>
+
+    <footer class="site-footer">
+        <span>Built by <strong>Neha</strong></span>
+        <span class="footer-dot">·</span>
+        <span>© 2026 Akshar. All rights reserved.</span>
+    </footer>
+
+    <script src="/static/js/theme.js?v=3"></script>
+    <script src="/static/js/app.js?v=3"></script>
+</body>
+</html>
