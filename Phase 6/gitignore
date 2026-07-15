@@ -1,0 +1,21 @@
+# Python bytecode cache — auto-regenerated, never commit
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Local model cache (huge — gets re-downloaded automatically by loader.py anyway)
+.cache/
+*.pt
+*.bin
+
+# Editor/OS clutter
+.vscode/
+.DS_Store
+
+# Local temp/output files your app generates at runtime
+/tmp/
