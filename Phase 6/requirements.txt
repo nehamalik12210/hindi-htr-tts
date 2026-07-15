@@ -1,0 +1,38 @@
+# ═══════════════════════════════════════════════
+# Phase 6 — Hindi HTR-TTS Web App Dependencies
+# ═══════════════════════════════════════════════
+
+# Web framework
+fastapi>=0.104
+uvicorn[standard]>=0.24
+python-multipart>=0.0.6
+
+# ML Core
+torch>=2.1
+torchvision>=0.16
+
+# Models
+transformers>=4.36
+huggingface_hub>=0.20
+ultralytics>=8.1
+parler-tts>=0.2
+
+# Image processing
+Pillow>=10.0
+opencv-python-headless>=4.8
+numpy>=1.24
+
+# Document handling
+PyMuPDF>=1.23           # PDF → images (import fitz)
+python-docx>=1.1        # DOCX read/write
+
+# Text export
+fpdf2>=2.7              # PDF generation with TTF font support
+
+# Audio
+soundfile>=0.12
+scipy>=1.11
+pydub>=0.25             # WAV → MP3/OGG conversion (needs ffmpeg)
+
+# TTS text processing
+regex>=2023.0
